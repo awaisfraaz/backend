@@ -4,6 +4,7 @@ const supabase = require('../supabaseClient');
 const multer = require('multer');
 const csv = require('csv-parser');
 const fs = require('fs');
+const path = require('path');
 const upload = multer({ dest: '/tmp/' });
 
 
