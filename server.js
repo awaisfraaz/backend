@@ -16,12 +16,12 @@ app.use(express.json());
 // Routes
 // const personroute = require('./routes/person');
 const homeroute = require('./routes/home');
-// const ringroute = require('./routes/ring');
+const ringroute = require('./routes/ring');
 const emailroute = require('./routes/email');
 
 app.use('/', homeroute);
 // app.use('/person', personroute);
-// app.use('/ring', ringroute);
+app.use('/ring', ringroute);
 app.use('/email', emailroute);
 
 // For Vercel serverless functions
