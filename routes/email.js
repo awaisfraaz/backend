@@ -176,7 +176,7 @@ router.post('/sendcustomemail', async (req, res) => {
         }
 
         const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: `"Orukka Support" <${process.env.EMAIL_USER}>`,
             to: to,
             subject: subject,
             html: emailHtml
