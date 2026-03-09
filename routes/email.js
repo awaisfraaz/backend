@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const transporter = require('../utilis/mailer');
 
+router.get('/', (req, res) => {
+    res.send("Email API is working!");
+});
+
 router.post('/sendcustomemail', async (req, res) => {
     try {
         const { to, subject, htmlDesign } = req.body;
