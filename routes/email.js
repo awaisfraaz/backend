@@ -10,6 +10,20 @@ router.post('/sendcustomemail', async (req, res) => {
     try {
         const { to, subject, htmlDesign } = req.body;
 
+        // Validate environment variables
+        if (!process.env.SENDGRID_API_KEY) {
+            console.error('SENDGRID_API_KEY is not configured');
+            return res.status(500).json({ 
+                error: "Email service not configured. Please contact administrator." 
+            });
+        }
+
+        if (!process.env.EMAIL_USER) {
+            console.error('EMAIL_USER is not configured');
+            return res.status(500).json({ 
+                error: "Email service not configured. Please contact administrator." 
+            });
+        }
 
         if (!to || !subject) {
             return res.status(400).json({ error: "Missing required fields: to and subject" });
@@ -176,7 +190,7 @@ router.post('/sendcustomemail', async (req, res) => {
         }
 
         const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: `"Orukka Support" <${process.env.EMAIL_USER}>`,
             to: to,
             subject: subject,
             html: emailHtml
@@ -194,7 +208,10 @@ router.post('/sendcustomemail', async (req, res) => {
 
     } catch (error) {
         console.error("Error sending email:", error);
-        res.status(500).json({ error: "Failed to send email" });
+        res.status(500).json({ 
+            error: "Failed to send email",
+            details: error.message 
+        });
     }
 });
 
