@@ -18,7 +18,7 @@ app.use(express.json());
 const homeroute = require('./routes/home');
 const ringroute = require('./routes/ring');
 const emailroute = require('./routes/email');
-const voiceroute = require('./routes/voice')
+const voiceroute = require('./routes/voice');
 
 app.use('/', homeroute);
 // app.use('/person', personroute);
