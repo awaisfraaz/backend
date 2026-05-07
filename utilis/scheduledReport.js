@@ -125,7 +125,4 @@ async function sendProfilesReport() {
   }
 }
 
-// Run immediately when this file is loaded (for localhost testing)
-sendProfilesReport();
-
 module.exports = sendProfilesReport;

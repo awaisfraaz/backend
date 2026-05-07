@@ -34,6 +34,21 @@ if (process.env.NODE_ENV !== 'production') {
         console.log('Server is running on port ' + PORT);
     });
 }
-
+// Cron endpoint 
+const sendProfilesReport = require('./utilis/scheduledReport');
+app.get('/api/cron/daily-report', async (req, res) => {
+    // Verify the request is from Vercel Cron using the secret
+    const authHeader = req.headers['authorization'];
+    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    try {
+        await sendProfilesReport();
+        res.status(200).json({ message: 'Daily report sent successfully' });
+    } catch (err) {
+        console.error('Cron report failed:', err.message);
+        res.status(500).json({ error: 'Report failed', details: err.message });
+    }
+});
 // Export for Vercel
 module.exports = app;
