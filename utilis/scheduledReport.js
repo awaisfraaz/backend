@@ -9,7 +9,7 @@ async function sendProfilesReport() {
 
     const { data: profiles, error } = await supabase
       .from('profiles')
-      .select('profile_id,first_name,last_name,email,country,local_balance,currency,GBP,EUR,USD')
+      .select('profile_id,first_name,last_name,email,country,order_ring,order_card,local_balance,currency,GBP,EUR,USD')
       .order('profile_id', { ascending: true });
 
     if (error) throw error;
