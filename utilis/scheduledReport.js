@@ -99,7 +99,7 @@ async function sendProfilesReport() {
             },
             To: [
               {
-                Email: 'muhammadawais0017@gmail.com'
+                Email: 'finance@monesave.com'
               }
             ],
             Subject: `Daily Balance Report - ${new Date().toLocaleDateString('en-GB')}`,
