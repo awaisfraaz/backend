@@ -6,7 +6,7 @@ const app = express();
 
 // CORS configuration for Vercel
 app.use(cors({
-    origin: '*', // Change this to your frontend URL in production
+    origin: true, // Reflects the request Origin (compatible with credentials:true)
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
