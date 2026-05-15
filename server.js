@@ -14,14 +14,15 @@ app.use(cors({
 app.use(express.json());
 
 // Routes
-// const personroute = require('./routes/person');
+const personroute = require('./routes/person');
 const homeroute = require('./routes/home');
 const ringroute = require('./routes/ring');
 const emailroute = require('./routes/email');
+
 // const voiceroute = require('./routes/voice');
 
 app.use('/', homeroute);
-// app.use('/person', personroute);
+app.use('/person', personroute);
 app.use('/ring', ringroute);
 app.use('/email', emailroute);
 // app.use('/voice', voiceroute);
