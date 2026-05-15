@@ -62,12 +62,11 @@ router.patch('/updatecard', async (req, res) => {
     try {
         const { user_email, card_no, expiry, cvv, card_type } = req.body;
         
-        // Convert expiry date format
-        const formattedExpiry = formatExpiryDate(expiry);
+      
         
         const { data, error } = await supabase
             .from('virtual_card')
-            .update({ card_no, expiry: formattedExpiry, cvv, card_type })
+            .update({ card_no, expiry, cvv, card_type })
             .eq('user_email', user_email)
             .select();
             
