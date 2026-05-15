@@ -195,7 +195,7 @@ router.patch("/updatevoicestatus/:user_id", async (req, res) => {
 
         const { voice_enabled, has_voice_signature } = req.body;
 
-        const { data, error } = await supabase
+        const {  error } = await supabase
             .from('profiles')
             .update({ voice_enabled, has_voice_signature })
             .eq('user_id', user_id)
@@ -203,10 +203,10 @@ router.patch("/updatevoicestatus/:user_id", async (req, res) => {
 
 
         if (error) {
-            console.error('--- STEP 5: Supabase ERROR ---', error);
+        
             return res.status(500).json({ error: 'Internal server error' });
         }
-       res.json({ msg: "person voice status updated sucessfuly in db ", data });
+       res.json({ msg: "person voice status updated sucessfuly in db "});
 
     } catch (err) {
       
