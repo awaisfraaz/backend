@@ -10,18 +10,23 @@ router.get("/", function (req, res) {
 });
 
 router.get('/getcard', async (req, res) => {
-    const { user_email } = req.body;
+    const { user_email } = req.query;
+
+    if (!user_email) {
+        return res.status(400).json({ error: 'user_email query parameter is required' });
+    }
 
     const { data, error } = await supabase
         .from('virtual_card')
         .select('*')
-        .eq('user_email', user_email)
+        .eq('user_email', user_email);
+        
     if (error) {
-        console.error('supabase error', error)
-        return res.status(500).json({ error: 'Internal server error' })
+        console.error('supabase error', error);
+        return res.status(500).json({ error: 'Internal server error' });
     }
+    
     res.json({ msg: "data is fetched", data });
-
 });
 router.post('/addcard', async (req, res) => {
     try {
