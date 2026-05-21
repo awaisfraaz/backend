@@ -6,8 +6,10 @@ const app = express();
 
 // CORS configuration for Vercel
 app.use(cors({
-    origin: true, // Reflects the request Origin (compatible with credentials:true)
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: [
+        'https://monesave-6039hl.flutterflow.app'
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true
 }));
 
