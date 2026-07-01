@@ -63,7 +63,12 @@ router.post("/addvehicle", async function (req, res) {
 })
 router.delete("/deletevehicle", async function (req, res) {
     try {
-        const { email, vehicle_reg } = req.body;
+        const email = req.query.email;
+        const vehicle_reg = req.query.vehicle_reg;
+
+        if (!email || !vehicle_reg) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
         const { data, error } = await supabase
             .from('voice_user_toll_links')
             .delete()
