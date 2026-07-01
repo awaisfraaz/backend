@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
 // for tolls 
 router.get("/getvehicle", async function (req, res) {
     try {
-        const { email } = req.body;
+        const email = req.query.email;
 
         if (!email) {
             return res.status(400).json({ error: "Missing required fields" });
