@@ -22,8 +22,7 @@ const ringroute = require('./routes/ring');
 const emailroute = require('./routes/email');
 const cardroute = require('./routes/card');
 const tollroute = require('./routes/toll');
-
-// const voiceroute = require('./routes/voice');
+const voiceroute = require('./routes/voice');
 
 app.use('/', homeroute);
 app.use('/person', personroute);
@@ -31,7 +30,8 @@ app.use('/ring', ringroute);
 app.use('/email', emailroute);
 app.use('/card', cardroute);
 app.use('/toll', tollroute);
-// app.use('/voice', voiceroute);
+app.use('/voice', voiceroute);
+
 
 // For Vercel serverless functions
 const PORT = process.env.PORT || 5000;
