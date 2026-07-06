@@ -33,9 +33,9 @@ router.get("/getvehicle", async function (req, res) {
 })
 router.post("/addvehicle", async function (req, res) {
     try {
-        const { email, vehicle_reg, auto_pay, auto_pay_limit, vehicle_class, country } = req.body;
+        const { email, vehicle_reg, auto_pay, vehicle_class, country } = req.body;
 
-        if (!email || !vehicle_reg || !auto_pay || !auto_pay_limit || !vehicle_class || !country) {
+        if (!email || !vehicle_reg || !auto_pay || !vehicle_class || !country) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
@@ -45,7 +45,6 @@ router.post("/addvehicle", async function (req, res) {
                 email: email,
                 vehicle_reg: vehicle_reg,
                 auto_pay: auto_pay,
-                auto_pay_limit: auto_pay_limit,
                 vehicle_class: vehicle_class,
                 country: country
             });
@@ -85,4 +84,6 @@ router.delete("/deletevehicle", async function (req, res) {
         res.status(500).json({ msg: "Server error" });
     }
 })
+
+
 module.exports = router;
