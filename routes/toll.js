@@ -97,15 +97,31 @@ router.post("/paytoll", async function (req, res) {
         const lowerCommand = command.toLowerCase().trim();
         const upperCommand = command.toUpperCase().trim();
 
-        //   Toll intent extraction with intent maping table 
-        const { data: intentData, error: intentError } = await supabase
-            .from('voice_intent_mappings')
-            .select('*')
-            .eq('category', 'toll');
+        // Run all 3 independent Supabase queries in parallel for faster response
+        const [intentResult, vehicleResult, tollBridgeResult] = await Promise.all([
+            supabase.from('voice_intent_mappings').select('*').eq('category', 'toll'),
+            supabase.from('voice_user_toll_links').select('*').eq('email', email),
+            supabase.from('voice_toll_bridge').select('*')
+        ]);
 
+        const { data: intentData, error: intentError } = intentResult;
+        const { data: vehicles, error: vehicleError } = vehicleResult;
+        const { data: tollBridges, error: tollError } = tollBridgeResult;
+
+        // Check for query errors
         if (intentError) {
+            console.error('Intent query error:', intentError.message);
             return res.status(400).json({ error: intentError.message });
         }
+        if (vehicleError) {
+            return res.status(400).json({ error: vehicleError.message });
+        }
+        if (tollError) {
+            return res.status(400).json({ error: tollError.message });
+        }
+
+        // Debug log for deployment troubleshooting
+        console.log('Intent data found:', intentData?.length || 0, 'rows for category=toll');
 
         // Match command against toll keywords (check both lower and upper)
         let intentMatched = false;
@@ -128,20 +144,12 @@ router.post("/paytoll", async function (req, res) {
         if (!intentMatched) {
             return res.status(400).json({
                 error: "Could not identify toll intent",
-                message: "I didn't understand your toll request. Please try again."
+                message: "I didn't understand your toll request. Please try again.",
+                debug_intent_count: intentData?.length || 0
             });
         }
 
-        // Get user's vehicle 
-        const { data: vehicles, error: vehicleError } = await supabase
-            .from('voice_user_toll_links')
-            .select('*')
-            .eq('email', email);
-
-        if (vehicleError) {
-            return res.status(400).json({ error: vehicleError.message });
-        }
-
+        // Check vehicles
         if (!vehicles || vehicles.length === 0) {
             return res.status(400).json({
                 error: "No vehicle linked",
@@ -154,14 +162,6 @@ router.post("/paytoll", async function (req, res) {
         const userVehicleClass = (userVehicle.vehicle_class || '').toLowerCase().trim();
 
         // Find the toll bridge name from the command
-        const { data: tollBridges, error: tollError } = await supabase
-            .from('voice_toll_bridge')
-            .select('*');
-
-        if (tollError) {
-            return res.status(400).json({ error: tollError.message });
-        }
-
         let matchedTollName = null;
 
         // Match canonical_name or short_code (check both lower and upper)
@@ -179,7 +179,7 @@ router.post("/paytoll", async function (req, res) {
             }
         }
 
-        // Ivoice_aliases from voice_toll_authorities
+        // voice_aliases from voice_toll_authorities (only fetch if no match yet)
         if (!matchedTollName) {
             const { data: authorities, error: authError } = await supabase
                 .from('voice_toll_authorities')
