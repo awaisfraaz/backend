@@ -86,7 +86,12 @@ router.delete("/deletevehicle", async function (req, res) {
 });
 router.post("/paytoll", async function (req, res) {
     try {
+        console.log('[DEBUG paytoll] raw req.body:', JSON.stringify(req.body));
+        console.log('[DEBUG paytoll] body type:', typeof req.body);
+
         const { email, command } = req.body;
+
+        console.log('[DEBUG paytoll] email:', email, '| command:', command);
 
         if (!email || !command) {
             return res.status(400).json({ error: "Missing required fields (email, command)" });
@@ -96,6 +101,8 @@ router.post("/paytoll", async function (req, res) {
         const lowerCommand = command.toLowerCase().trim();
         const upperCommand = command.toUpperCase().trim();
 
+        console.log('[DEBUG paytoll] lowerCommand:', lowerCommand);
+
         //   Toll intent extraction with intent maping table 
         const { data: intentData, error: intentError } = await supabase
             .from('voice_intent_mappings')
@@ -103,8 +110,12 @@ router.post("/paytoll", async function (req, res) {
             .eq('category', 'toll');
 
         if (intentError) {
+            console.log('[DEBUG paytoll] intentError:', intentError.message);
             return res.status(400).json({ error: intentError.message });
         }
+
+        console.log('[DEBUG paytoll] intentData count:', intentData ? intentData.length : 0);
+        console.log('[DEBUG paytoll] intentData:', JSON.stringify(intentData));
 
         // Match command against toll keywords (check both lower and upper)
         let intentMatched = false;
@@ -113,6 +124,7 @@ router.post("/paytoll", async function (req, res) {
         if (intentData && intentData.length > 0) {
             for (const intent of intentData) {
                 const keywords = intent.keywords || [];
+                console.log('[DEBUG paytoll] checking keywords:', keywords);
                 for (const keyword of keywords) {
                     if (lowerCommand.includes(keyword.toLowerCase()) || upperCommand.includes(keyword.toUpperCase())) {
                         intentMatched = true;
@@ -125,6 +137,7 @@ router.post("/paytoll", async function (req, res) {
         }
 
         if (!intentMatched) {
+            console.log('[DEBUG paytoll] FAILED - no intent matched for command:', lowerCommand);
             return res.status(400).json({
                 error: "Could not identify toll intent",
                 message: "I didn't understand your toll request. Please try again."
@@ -247,6 +260,7 @@ router.post("/paytoll", async function (req, res) {
         res.status(500).json({ msg: "Server error" });
     }
 });
+
 
 module.exports = router;
 
