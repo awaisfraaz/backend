@@ -83,7 +83,7 @@ router.delete("/deletevehicle", async function (req, res) {
         console.error('Server error:', err);
         res.status(500).json({ msg: "Server error" });
     }
-})
+});
 // Pay toll 
 router.post("/paytoll", async function (req, res) {
     try {
@@ -248,8 +248,5 @@ router.post("/paytoll", async function (req, res) {
         res.status(500).json({ msg: "Server error" });
     }
 });
-
-module.exports = router;
-
 
 module.exports = router;
