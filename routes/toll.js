@@ -84,7 +84,6 @@ router.delete("/deletevehicle", async function (req, res) {
         res.status(500).json({ msg: "Server error" });
     }
 });
-// Pay toll 
 router.post("/paytoll", async function (req, res) {
     try {
         const { email, command } = req.body;
