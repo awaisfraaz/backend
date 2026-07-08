@@ -100,7 +100,7 @@ router.post("/paytoll", async function (req, res) {
         const { data: intentData, error: intentError } = await supabase
             .from('voice_intent_mappings')
             .select('*')
-            .ilike('category', 'toll');
+            .eq('category', 'toll');
 
         if (intentError) {
             return res.status(400).json({ error: intentError.message });
@@ -127,12 +127,7 @@ router.post("/paytoll", async function (req, res) {
         if (!intentMatched) {
             return res.status(400).json({
                 error: "Could not identify toll intent",
-                message: "I didn't understand your toll request. Please try again.",
-                debug: {
-                    intent_rows_found: intentData?.length || 0,
-                    keywords_in_db: intentData?.map(i => i.keywords) || [],
-                    command_received: lowerCommand
-                }
+                message: "I didn't understand your toll request. Please try again."
             });
         }
 
@@ -254,3 +249,4 @@ router.post("/paytoll", async function (req, res) {
 });
 
 module.exports = router;
+
