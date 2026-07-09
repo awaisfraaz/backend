@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const supabase = require('../supabaseClient');
+const wordsToNumbersModule = require('words-to-numbers');
+const wordsToNumbers = wordsToNumbersModule.wordsToNumbers || wordsToNumbersModule.default || wordsToNumbersModule;
 
 router.get('/', async (req, res) => {
     res.send('api is working ')
@@ -368,4 +370,5 @@ router.post("/paycontact", async function (req, res) {
     }
 });
 module.exports = router;
+module.exports.extractNumberFromWords = extractNumberFromWords;
 
