@@ -93,15 +93,14 @@ router.delete("/deletecontact", async function (req, res) {
 function extractNumberFromWords(text) {
     if (!text) return null;
 
-    // Convert words to numbers (returns a number, or a string with words converted to digits)
+  
     const converted = wordsToNumbers(text.toLowerCase());
 
-    // If it successfully converted the entire string to a number, return it
     if (typeof converted === 'number') {
         return converted > 0 ? converted : null;
     }
 
-    // Otherwise, it returned a string like "send 250 dollars". Extract the first number.
+
     if (typeof converted === 'string') {
         // Matches integers and decimals (e.g., 250, 250.50, .5)
         const match = converted.match(/\d+(?:\.\d+)?/);
