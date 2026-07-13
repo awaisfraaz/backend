@@ -14,6 +14,33 @@ router.get("/", function (req, res) {
     });
 });
 
+router.get('/getallrings', upload.none(), async function (req, res) {
+    try {
+        const category = req.query.category || req.body?.category;
+        const form = req.query.form || req.body?.form;
+
+        let dbQuery = supabase.from('ring_inventory').select('name,description,price,category,form');
+
+        if (category) {
+            dbQuery = dbQuery.eq('category', category);
+        }
+        if (form) {
+            dbQuery = dbQuery.eq('form', form);
+        }
+
+        const { data, error } = await dbQuery;
+
+        if (error) {
+            console.error('Supabase error:', error);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        res.json(data);
+    } catch (err) {
+        console.error('Server error:', err);
+        res.status(500).json({ msg: "Server error" });
+    }
+})
 
 router.post('/upload', upload.single('csvfile'), function (req, res) {
     if (!req.file) {
