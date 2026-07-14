@@ -19,7 +19,7 @@ router.get('/getallrings', upload.none(), async function (req, res) {
         const category = req.query.category || req.body?.category;
         const form = req.query.form || req.body?.form;
 
-        let dbQuery = supabase.from('ring_inventory').select('name,description,price,category,form');
+        let dbQuery = supabase.from('ring_inventory').select('name,description,price,category,form,image');
 
         if (category) {
             dbQuery = dbQuery.eq('category', category);
